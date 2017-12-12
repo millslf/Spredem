@@ -1,7 +1,7 @@
 package za.co.jefdev;
 
-import persistence.FileReaderWriter;
-import persistence.SpreadEntity;
+import za.co.jefdev.persistence.FileReaderWriter;
+import za.co.jefdev.persistence.SpreadEntity;
 import org.json.JSONObject;
 import org.reflections.Reflections;
 import za.co.jefdev.utils.Rest;
