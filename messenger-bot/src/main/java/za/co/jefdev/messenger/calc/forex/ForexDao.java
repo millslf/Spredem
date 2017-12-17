@@ -1,4 +1,4 @@
-package za.co.jefdev.calc.forex;
+package za.co.jefdev.messenger.calc.forex;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

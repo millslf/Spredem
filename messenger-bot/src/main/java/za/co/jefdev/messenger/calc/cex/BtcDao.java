@@ -1,4 +1,4 @@
-package za.co.jefdev.calc.cex;
+package za.co.jefdev.messenger.calc.cex;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

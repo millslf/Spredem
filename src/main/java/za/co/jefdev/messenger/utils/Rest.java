@@ -1,4 +1,4 @@
-package za.co.jefdev.utils;
+package za.co.jefdev.messenger.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

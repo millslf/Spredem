@@ -4,7 +4,7 @@ import za.co.jefdev.persistence.FileReaderWriter;
 import za.co.jefdev.persistence.SpreadEntity;
 import org.json.JSONObject;
 import org.reflections.Reflections;
-import za.co.jefdev.utils.Rest;
+import za.co.jefdev.messenger.utils.Rest;
 
 import java.io.*;
 import java.text.DecimalFormat;

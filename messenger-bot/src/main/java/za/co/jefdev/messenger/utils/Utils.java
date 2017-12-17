@@ -1,6 +1,4 @@
-package za.co.jefdev.utils;
-
-import java.util.function.Function;
+package za.co.jefdev.messenger.utils;
 
 public class Utils {
 

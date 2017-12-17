@@ -1,4 +1,4 @@
-package za.co.jefdev.utils;
+package za.co.jefdev.messenger.utils;
 
 import com.google.api.client.util.Base64;
 import com.google.api.services.gmail.Gmail;

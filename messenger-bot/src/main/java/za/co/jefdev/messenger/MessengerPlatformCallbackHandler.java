@@ -11,10 +11,6 @@ import com.github.messenger4j.receive.events.AttachmentMessageEvent.AttachmentTy
 import com.github.messenger4j.receive.events.AttachmentMessageEvent.Payload;
 import com.github.messenger4j.receive.handlers.*;
 import com.github.messenger4j.send.*;
-import com.github.messenger4j.send.buttons.Button;
-import com.github.messenger4j.send.templates.ButtonTemplate;
-import com.github.messenger4j.send.templates.GenericTemplate;
-import com.github.messenger4j.send.templates.ReceiptTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +18,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import za.co.jefdev.calc.cex.CexHelper;
-import za.co.jefdev.calc.forex.ForexHelper;
+import za.co.jefdev.messenger.calc.cex.CexHelper;
+import za.co.jefdev.messenger.calc.forex.ForexHelper;
 
 import java.util.Date;
 import java.util.List;
@@ -40,9 +36,6 @@ import static com.github.messenger4j.MessengerPlatform.*;
 @RestController
 @RequestMapping("/callback")
 public class MessengerPlatformCallbackHandler {
-
-    private static final String RESOURCE_URL =
-            "https://raw.githubusercontent.com/fbsamples/messenger-platform-samples/master/node/public";
 
     private static final Logger logger = LoggerFactory.getLogger(MessengerPlatformCallbackHandler.class);
 

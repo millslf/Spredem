@@ -1,4 +1,4 @@
-package za.co.jefdev.calc.cex;
+package za.co.jefdev.messenger.calc.cex;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpEntity;
@@ -6,12 +6,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
-import za.co.jefdev.utils.Call1;
 
-import java.io.IOException;
 import java.util.Arrays;
 
-import static za.co.jefdev.utils.Utils.exec;
+import static za.co.jefdev.messenger.utils.Utils.exec;
 
 public class CexHelper {
 

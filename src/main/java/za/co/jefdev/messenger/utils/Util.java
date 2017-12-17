@@ -1,4 +1,4 @@
-package za.co.jefdev.utils;
+package za.co.jefdev.messenger.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
