@@ -89,7 +89,6 @@ public class BaseCalc {
                 }
                 message = message + subMessage;
             }
-            System.out.println(message);
             if(!spreadAboveTwo.equals("")){
                 System.out.println(spreadAboveTwo);
                 GoogleMail.sendMail("btcspredem@gmail.com", "jefdev44", "millslf@gmail.com", "Above2", messageToSend);
