@@ -4,29 +4,32 @@ import java.io.*;
 
 public class FileReaderWriter {
 
-    public static void persistEntities(SpreadEntity entity) throws IOException, ClassNotFoundException {
-        FileOutputStream f = new FileOutputStream(new File("myObjects.txt"));
-        ObjectOutputStream o = new ObjectOutputStream(f);
+    public static void persistEntities(Object... entity) throws IOException, ClassNotFoundException {
+        for(Object obj:entity) {
+            FileOutputStream f = new FileOutputStream(new File(obj.getClass().getName().toString()));
+            ObjectOutputStream o = new ObjectOutputStream(f);
 
-        // Write objects to file
-        o.writeObject(entity);
+            // Write objects to file
+            o.writeObject(obj);
 
-        o.close();
-        f.close();
+            o.close();
+            f.close();
+        }
     }
 
-    public static SpreadEntity loadValues() throws IOException {
+    public static Object loadValues(String entityName) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
         FileInputStream fi = null;
-        SpreadEntity oldSpreadVals;
         ObjectInputStream oi = null;
         try {
-            fi = new FileInputStream(new File("myObjects.txt"));
+            fi = new FileInputStream(new File(entityName));
             oi = new ObjectInputStream(fi);
 
             // Read objects
-             return oldSpreadVals = (SpreadEntity) oi.readObject();
+             return oi.readObject();
+
         } catch (IOException | ClassNotFoundException e) {
-            return oldSpreadVals = new SpreadEntity();
+            Class cls = Class.forName(entityName);
+            return cls.newInstance();
         } finally {
             if(oi != null) {
                 oi.close();
