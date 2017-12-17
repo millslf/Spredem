@@ -4,7 +4,8 @@ import za.co.jefdev.persistence.FileReaderWriter;
 import za.co.jefdev.persistence.SpreadEntity;
 import org.json.JSONObject;
 import org.reflections.Reflections;
-import za.co.jefdev.messenger.utils.Rest;
+import za.co.jefdev.utils.GoogleMail;
+import za.co.jefdev.utils.Rest;
 
 import java.io.*;
 import java.text.DecimalFormat;
@@ -83,20 +84,19 @@ public class BaseCalc {
                 }else{
                     subCalc.setOldEmailValue(subCalc.getOldEmailValue());
                 }
-                if (subCalc.getSpread().compareTo(Double.parseDouble("0.0")) >= 2) {
+                if (subCalc.getSpread().compareTo(Double.parseDouble("2.0")) >= 0) {
                     spreadAboveTwo = spreadAboveTwo + subMessage;
                 }
                 message = message + subMessage;
             }
-            System.out.println(spreadAboveTwo);
-//            System.out.println(message);
+            if(!spreadAboveTwo.equals("")){
+                System.out.println(spreadAboveTwo);
+                GoogleMail.sendMail("btcspredem@gmail.com", "jefdev44", "millslf@gmail.com", "Above2", messageToSend);
+            }
             FileReaderWriter.persistEntities(spreadEntity);
             if (!messageToSend.equals("")) {
-//                System.out.println("WOULD HAVE SENT THIS: " + messageToSend);
-
-//                GoogleMail.sendMail("btcspredem@gmail.com", "jefdev44", "millslf@gmail.com, jaspervdbijl@gmail.com," +
-//                        "ettienneleroux@gmail.com, millsgeo@gmail.com", subject, messageToSend);
-//                GoogleMail.sendMail("btcspredem@gmail.com", "jefdev44", "millslf@gmail.com", subject, messageToSend);
+                GoogleMail.sendMail("btcspredem@gmail.com", "jefdev44", "jaspervdbijl@gmail.com," +
+                        "ettienneleroux@gmail.com, millsgeo@gmail.com", subject, messageToSend);
 
             }
         } catch (Exception e) {
