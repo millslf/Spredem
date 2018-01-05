@@ -8,6 +8,8 @@ import za.co.jefdev.utils.Rest;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class BaseCalc {
@@ -29,9 +31,6 @@ public class BaseCalc {
         BaseCalc baseCalc = new BaseCalc();
         baseCalc.getAllRatesfromAPIs();
         oldSpreadVals = (SpreadEntity) FileReaderWriter.loadValues(SpreadEntity.class.getName().toString());
-        CEXEntity cex = new CEXEntity();
-        LunoEntity luno = new LunoEntity();
-
         String messageToSend = "";
         String message = "";
         String subject = "";
@@ -116,12 +115,67 @@ public class BaseCalc {
 
     public void getAllRatesfromAPIs() throws IOException, ClassNotFoundException {
         //Free version only allows two currencies at a time and only 60 calls per hour
-        JSONObject jsonObject = new JSONObject(Rest.makeRequest("https://free.currencyconverterapi.com/api/v5/convert?q=USD_ZAR,EUR_ZAR&compact=ultra"));
-        usd.setZar(jsonObject.getDouble("USD_ZAR"));
-        eur.setZar(jsonObject.getDouble("EUR_ZAR"));
-        jsonObject = new JSONObject(Rest.makeRequest("https://free.currencyconverterapi.com/api/v5/convert?q=RUB_ZAR,GBP_ZAR&compact=ultra"));
-        rub.setZar(jsonObject.getDouble("RUB_ZAR"));
-        gbp.setZar(jsonObject.getDouble("GBP_ZAR"));
+
+        List<Thread> threadlist = new ArrayList<>();
+        threadlist.add(new Thread(new RateRest(usd, eur, "USD_ZAR", "EUR_ZAR",
+                "https://free.currencyconverterapi.com/api/v5/convert?q=USD_ZAR,EUR_ZAR&compact=ultra")));
+        threadlist.add(new Thread(new RateRest(rub, gbp, "RUB_ZAR", "GBP_ZAR",
+                "https://free.currencyconverterapi.com/api/v5/convert?q=RUB_ZAR,GBP_ZAR&compact=ultra")));
+        threadlist.add(new Thread(new InstantiateClasses(LunoEntity.class)));
+        threadlist.add(new Thread(new InstantiateClasses(CEXEntity.class)));
+        for(Thread thread:threadlist) {
+            thread.run();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         FileReaderWriter.persistEntities(usd, eur, rub, gbp);
+    }
+
+    public class RateRest implements Runnable {
+
+        BaseCurrencyEntity cur1, cur2;
+        String curPair1, curPair2, url;
+
+        public RateRest(BaseCurrencyEntity cur1, BaseCurrencyEntity cur2, String curPair1, String curPair2, String url) {
+            this.cur1 = cur1;
+            this.cur2 = cur2;
+            this.curPair1 = curPair1;
+            this.curPair2 = curPair2;
+            this.url = url;
+        }
+
+        public void run(){
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(Rest.makeRequest(url));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            cur1.setZar(jsonObject.getDouble(curPair1));
+            cur2.setZar(jsonObject.getDouble(curPair2));
+        }
+    }
+
+    public class InstantiateClasses implements Runnable {
+
+        Class aClass = null;
+
+        public InstantiateClasses(Class aClass) {
+            this.aClass = aClass;
+        }
+
+        @Override
+        public void run() {
+            try {
+                aClass.newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
