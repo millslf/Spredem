@@ -24,7 +24,7 @@ public class BTCBuyRUBSellZAR extends BaseCalc {
     public String calcProfit(){
         Double cexWithFee = LIMIT*(BaseCalc.PROVIDER_BUY_FEE);
         Double actualCostAtFNB = cexWithFee* currency.getFnbZar();
-        Double numOfBTC = LIMIT/ cexEntity.getCexRUBBTCPrice();
+        Double numOfBTC = LIMIT/ cexEntity.getPair("BTCRUB");
         Double numOfBTCAfterTransfer = numOfBTC- BaseCalc.LUNO_BTC_TRANSFER_FEE;
         Double sellAtCurrentRate = numOfBTCAfterTransfer * lunoEntity.getLunoBTCAsk();
         Double profit = sellAtCurrentRate - actualCostAtFNB;
@@ -56,13 +56,13 @@ public class BTCBuyRUBSellZAR extends BaseCalc {
 
     public String printAllRates(){
         effectiveSpread = (lunoEntity.getLunoBTCAsk() -
-                (cexEntity.getCexRUBBTCPrice() * currency.getFnbZar()))/lunoEntity.getLunoBTCAsk()*100-(BaseCalc.PROVIDER_BUY_FEE-1)*100;
+                (cexEntity.getPair("BTCRUB") * currency.getFnbZar()))/lunoEntity.getLunoBTCAsk()*100-(BaseCalc.PROVIDER_BUY_FEE-1)*100;
 
         return "Current RUBZAR exchange rate: R " + BaseCalc.formatter.format(currency.getZar()) + "\n" +
         "Current RUBZAR exchange rate with FNB " + BaseCalc.formatter.format(((currency.FNB_FOREX_FEE-1)*100))+ "% foreign exchange charge: R "
                 + BaseCalc.formatter.format(currency.getFnbZar()) + "\n" +
-        "CEX buy price(Excluding provider fee): R " + BaseCalc.formatter.format(cexEntity.getCexRUBBTCPrice() * currency.getFnbZar())
-                +"(RUB" + BaseCalc.formatter.format(cexEntity.getCexRUBBTCPrice()) + ")" + "\n" +
+        "CEX buy price(Excluding provider fee): R " + BaseCalc.formatter.format(cexEntity.getPair("BTCRUB") * currency.getFnbZar())
+                +"(RUB" + BaseCalc.formatter.format(cexEntity.getPair("BTCRUB")) + ")" + "\n" +
         "Luno selling price: R " + BaseCalc.formatter.format(lunoEntity.getLunoBTCAsk()) + "\n" +
         "Spread with "  + BaseCalc.formatter.format(((BaseCalc.PROVIDER_BUY_FEE-1)*100)) + "% charge(1 BTC): "
                 + BaseCalc.formatter.format(effectiveSpread) + "%";

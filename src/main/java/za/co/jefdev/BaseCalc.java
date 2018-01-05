@@ -13,14 +13,12 @@ import java.util.Set;
 public class BaseCalc {
 
     public static Double LUNO_BTC_TRANSFER_FEE = new Double("0.0012"),
-            PROVIDER_BUY_FEE = new Double("1.035");
+            PROVIDER_BUY_FEE = new Double("1.0365");
 
     private EUREntity eur = new EUREntity();
     private USDEntity usd = new USDEntity();
     private RUBEntity rub = new RUBEntity();
     private GBPEntity gbp = new GBPEntity();
-    private static CEXEntity cex = null;
-    private static LunoEntity luno = null;
 
     public static NumberFormat formatter = new DecimalFormat("###,###.00");
 
@@ -31,8 +29,8 @@ public class BaseCalc {
         BaseCalc baseCalc = new BaseCalc();
         baseCalc.getAllRatesfromAPIs();
         oldSpreadVals = (SpreadEntity) FileReaderWriter.loadValues(SpreadEntity.class.getName().toString());
-        cex = new CEXEntity();
-        luno = new LunoEntity();
+        CEXEntity cex = new CEXEntity();
+        LunoEntity luno = new LunoEntity();
 
         String messageToSend = "";
         String message = "";
@@ -75,7 +73,7 @@ public class BaseCalc {
             FileReaderWriter.persistEntities(spreadEntity);
             if (!messageToSend.equals("")) {
 //                GoogleMail.sendMail("btcspredem@gmail.com", "jefdev44", "jaspervdbijl@gmail.com," +
-//                        "ettienneleroux@gmail.com, millsgeo@gmail.com", subject, messageToSend);
+//                        "ettienneleroux@gmail.com, millsgeo@gmail.com, heindrich_leroux@yahoo.com", subject, messageToSend);
 
             }
             System.out.println(message);
