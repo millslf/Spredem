@@ -2,13 +2,9 @@ package za.co.jefdev.persistence;
 
 import org.json.JSONObject;
 import za.co.jefdev.utils.Rest;
-
 import java.io.IOException;
-import java.io.Serializable;
 
-public class CEXEntity  implements Serializable {
-    private String allPairsDelimited = "";
-
+public class CEXEntity extends BaseExchangeEntity{
     public CEXEntity() {
         JSONObject jsonObject;
         try {
@@ -29,13 +25,6 @@ public class CEXEntity  implements Serializable {
         }
     }
 
-    public Double getPair(String pair){
-        for(String pr:allPairsDelimited.split(",")){
-            if(pr.contains(pair)){
-                return new Double(pr.replace(pair, ""));
-            }
-        }
-        return null;
-    }
+
 
 }

@@ -30,7 +30,7 @@ public class BTCBuyZARSellUSD extends BaseCalc {
         Double numOfBTC = (LIMIT*currency.getZar())/lunoEntity.getLunoBTCBid();
         Double btcAfterTransfer = numOfBTC- BaseCalc.LUNO_BTC_TRANSFER_FEE;
         Double sellAmount = btcAfterTransfer * cexEntity.getPair("BTCUSD")*currency.getZar();
-        Double profit = sellAmount - (LIMIT * currency.getFnbZar());
+        Double profit = sellAmount - (LIMIT * currency.getZar());
 
         return "Buying for: $ " + BaseCalc.formatter.format(LIMIT) + "(R " + BaseCalc.formatter.format(LIMIT * currency.getZar()) +")" + "\n" +
         "Number of Bitcoins at current rate: BTC " + String.format("%1$,.6f", numOfBTC) + "\n" +
@@ -40,7 +40,7 @@ public class BTCBuyZARSellUSD extends BaseCalc {
     }
 
     public String printAllRates(){
-        effectiveSpread = ((cexEntity.getPair("BTCUSD") *currency.getZar()) - lunoEntity.getLunoBTCBid())/((cexEntity.getPair("BTCUSD") *currency.getZar())*100);
+        effectiveSpread = (cexEntity.getPair("BTCUSD") * currency.getZar() - lunoEntity.getLunoBTCBid())/ (cexEntity.getPair("BTCUSD") *currency.getZar()) *100;
 
         return "Current USDZAR exchange rate: R " + BaseCalc.formatter.format(currency.getZar()) + "\n" +
         "CEX BTC price: R " + BaseCalc.formatter.format(cexEntity.getPair("BTCUSD"))+"($" + BaseCalc.formatter.format(cexEntity.getPair("BTCUSD")) + ")" + "\n" +

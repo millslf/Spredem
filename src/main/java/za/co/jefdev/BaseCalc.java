@@ -3,6 +3,7 @@ package za.co.jefdev;
 import za.co.jefdev.persistence.*;
 import org.json.JSONObject;
 import org.reflections.Reflections;
+import za.co.jefdev.utils.GoogleMail;
 import za.co.jefdev.utils.Rest;
 
 import java.io.*;
@@ -66,15 +67,16 @@ public class BaseCalc {
                 message = message + subMessage;
             }
             if (!spreadAboveTwo.equals("")) {
-//                System.out.println(spreadAboveTwo);
 //                GoogleMail.sendMail("btcspredem@gmail.com", "jefdev44", "millslf@gmail.com", "Above2", spreadAboveTwo);
             }
-            FileReaderWriter.persistEntities(spreadEntity);
             if (!messageToSend.equals("")) {
+//                GoogleMail.sendMail("btcspredem@gmail.com", "jefdev44", "millslf@gmail.com", "Above2", spreadAboveTwo);
+//
 //                GoogleMail.sendMail("btcspredem@gmail.com", "jefdev44", "jaspervdbijl@gmail.com," +
 //                        "ettienneleroux@gmail.com, millsgeo@gmail.com, heindrich_leroux@yahoo.com", subject, messageToSend);
 
             }
+            FileReaderWriter.persistEntities(spreadEntity);
             System.out.println(message);
         } catch (Exception e) {
             e.printStackTrace();

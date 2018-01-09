@@ -61,7 +61,7 @@ public class BTCBuyUSDSellZAR extends BaseCalc {
         return "Current USDZAR exchange rate: R " + BaseCalc.formatter.format(currency.getZar()) + "\n" +
         "Current USDZAR exchange rate with FNB " + BaseCalc.formatter.format(((currency.FNB_FOREX_FEE-1)*100))+ "% foreign exchange charge: R "
                 + BaseCalc.formatter.format(currency.getFnbZar()) + "\n" +
-        "CEX buy price(Excluding provider fee): R " + BaseCalc.formatter.format(cexEntity.getPair("BTCUSD"))+
+        "CEX buy price(Excluding provider fee): R " + BaseCalc.formatter.format(cexEntity.getPair("BTCUSD")*currency.getZar())+
                 "($" + BaseCalc.formatter.format(cexEntity.getPair("BTCUSD")) + ")" + "\n" +
         "Luno selling price: R " + BaseCalc.formatter.format(lunoEntity.getLunoBTCAsk()) + "\n" +
         "Spread with "  + BaseCalc.formatter.format(((BaseCalc.PROVIDER_BUY_FEE-1)*100)) + "% charge(1 BTC): "
