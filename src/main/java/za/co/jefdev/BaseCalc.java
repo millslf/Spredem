@@ -1,12 +1,14 @@
 package za.co.jefdev;
 
-import za.co.jefdev.persistence.*;
 import org.json.JSONObject;
 import org.reflections.Reflections;
-import za.co.jefdev.utils.GoogleMail;
+import za.co.jefdev.persistence.*;
+import za.co.jefdev.utils.FileReaderWriter;
+import za.co.jefdev.utils.InstantiateClasses;
 import za.co.jefdev.utils.Rest;
+import za.co.jefdev.utils.Util;
 
-import java.io.*;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -31,50 +33,34 @@ public class BaseCalc {
     public static void main(String[] args) throws Exception {
         BaseCalc baseCalc = new BaseCalc();
         baseCalc.getAllRatesfromAPIs();
+        UserEntity userEntity = new UserEntity();
         oldSpreadVals = (SpreadEntity) FileReaderWriter.loadValues(SpreadEntity.class.getName().toString());
-        String messageToSend = "";
         String message = "";
-        String subject = "";
-        String spreadAboveTwo = "";
-
         try {
             Reflections reflections = new Reflections("za.co.jefdev.services");
             Set<Class<? extends BaseCalc>> allClasses = reflections.getSubTypesOf(BaseCalc.class);
 
             for (Class name : allClasses) {
-                String subMessage = "";
                 BaseCalc subCalc;
                 subCalc = (BaseCalc) name.newInstance();
-                subMessage = subMessage + "\n\n---------------------------------------\n";
-                subMessage = subMessage + subCalc.getMessage();
-                subMessage = subMessage + "\n---------------------------------------\n";
-                subMessage = subMessage + "\n" + subCalc.printAllRates();
-                subMessage = subMessage + "\n\n" + subCalc.calcProfit();
+                String subMessage = subCalc.getMessage() + "\n" + subCalc.printAllRates() + "\n\n" + subCalc.calcProfit();
                 subCalc.setSpread();
                 if (subCalc.getOldEmailValue() != null && subCalc.getSpread().compareTo(subCalc.getOldEmailValue()) >= 0) {
-                    messageToSend = messageToSend + subMessage;
-                    subject = subject == "" ? subCalc.getMessage() : subject + " ---- AND ---- " + subCalc.getMessage();
                     subCalc.setOldEmailValue(subCalc.getSpread() + 0.5);
+                    for(UserEntity.User user : userEntity.getUserList()){
+                        for(Class subscription:user.getSubscriptions()){
+                            if(name.equals(subscription)){
+//                                GoogleMail.sendMail("btcspredem@gmail.com", "jefdev44", user.getEmailAddress(), subCalc.getMessage(), subMessage);
+                            }
+                        }
+                    }
                 } else if (subCalc.getOldEmailValue() == null) {
                     //Arg 0 is startSpread, if spread goes higher, mail will be sent and incremented to a new high.
                     subCalc.setOldEmailValue(new Double(args[0]));
                 } else {
                     subCalc.setOldEmailValue(subCalc.getOldEmailValue());
                 }
-                if (subCalc.getSpread().compareTo(Double.parseDouble("2.0")) >= 0) {
-                    spreadAboveTwo = spreadAboveTwo + subMessage;
-                }
-                message = message + subMessage;
-            }
-            if (!spreadAboveTwo.equals("")) {
-//                GoogleMail.sendMail("btcspredem@gmail.com", "jefdev44", "millslf@gmail.com", "Above2", spreadAboveTwo);
-            }
-            if (!messageToSend.equals("")) {
-//                GoogleMail.sendMail("btcspredem@gmail.com", "jefdev44", "millslf@gmail.com", "Above2", spreadAboveTwo);
-//
-//                GoogleMail.sendMail("btcspredem@gmail.com", "jefdev44", "jaspervdbijl@gmail.com," +
-//                        "ettienneleroux@gmail.com, millsgeo@gmail.com, heindrich_leroux@yahoo.com", subject, messageToSend);
-
+                message = message + "\n\n---------------\n" + subMessage;
             }
             FileReaderWriter.persistEntities(spreadEntity);
             System.out.println(message);
@@ -111,10 +97,6 @@ public class BaseCalc {
         return "";
     }
 
-    public Boolean isMultiTrade() {
-        return false;
-    }
-
     public void getAllRatesfromAPIs() throws IOException, ClassNotFoundException {
         //Free version only allows two currencies at a time and only 60 calls per hour
 
@@ -125,14 +107,7 @@ public class BaseCalc {
                 "https://free.currencyconverterapi.com/api/v5/convert?q=RUB_ZAR,GBP_ZAR&compact=ultra")));
         threadlist.add(new Thread(new InstantiateClasses(LunoEntity.class)));
         threadlist.add(new Thread(new InstantiateClasses(CEXEntity.class)));
-        for(Thread thread:threadlist) {
-            thread.run();
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        Util.runThreads(threadlist);
         FileReaderWriter.persistEntities(usd, eur, rub, gbp);
     }
 
@@ -158,26 +133,6 @@ public class BaseCalc {
             }
             cur1.setZar(jsonObject.getDouble(curPair1));
             cur2.setZar(jsonObject.getDouble(curPair2));
-        }
-    }
-
-    public class InstantiateClasses implements Runnable {
-
-        Class aClass = null;
-
-        public InstantiateClasses(Class aClass) {
-            this.aClass = aClass;
-        }
-
-        @Override
-        public void run() {
-            try {
-                aClass.newInstance();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
         }
     }
 }

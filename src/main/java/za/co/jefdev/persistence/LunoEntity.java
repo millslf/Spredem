@@ -1,28 +1,22 @@
 package za.co.jefdev.persistence;
 
 import org.json.JSONObject;
+import za.co.jefdev.utils.FileReaderWriter;
 import za.co.jefdev.utils.Rest;
 
 import java.io.IOException;
 import java.io.Serializable;
 
-public class LunoEntity  implements Serializable {
+public class LunoEntity implements Serializable {
 
     Double lunoBTCBid, lunoBTCAsk;
 
-    public LunoEntity() {
+    public LunoEntity() throws IOException, ClassNotFoundException {
         JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(Rest.makeRequest("https://api.mybitx.com/api/1/ticker?pair=XBTZAR"));
-            lunoBTCBid = new Double(jsonObject.getString("bid"));
-            lunoBTCAsk = new Double(jsonObject.getString("ask"));
-            FileReaderWriter.persistEntities(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
+        jsonObject = new JSONObject(Rest.makeRequest("https://api.mybitx.com/api/1/ticker?pair=XBTZAR"));
+        lunoBTCBid = new Double(jsonObject.getString("bid"));
+        lunoBTCAsk = new Double(jsonObject.getString("ask"));
+        FileReaderWriter.persistEntities(this);
     }
 
     public Double getLunoBTCBid() {

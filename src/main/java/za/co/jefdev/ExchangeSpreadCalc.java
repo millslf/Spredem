@@ -1,0 +1,62 @@
+package za.co.jefdev;
+
+import za.co.jefdev.persistence.BaseExchangeEntity;
+import za.co.jefdev.persistence.BitFinexEntity;
+import za.co.jefdev.persistence.CEXEntity;
+import za.co.jefdev.persistence.QuadrigaEntity;
+import za.co.jefdev.utils.FileReaderWriter;
+import za.co.jefdev.utils.InstantiateClasses;
+import za.co.jefdev.utils.Util;
+
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class ExchangeSpreadCalc {
+
+    public static NumberFormat formatter = new DecimalFormat("###,###0.000000");
+
+    public static void main(String[] args) throws Exception {
+        ExchangeSpreadCalc newCalc = new ExchangeSpreadCalc();
+        newCalc.getAllRatesfromAPIs();
+        CEXEntity cexEntity = (CEXEntity) FileReaderWriter.loadValues(CEXEntity.class.getName().toString());
+        QuadrigaEntity quadEntity = (QuadrigaEntity) FileReaderWriter.loadValues(QuadrigaEntity.class.getName().toString());
+        BitFinexEntity bitFinexEntity = (BitFinexEntity) FileReaderWriter.loadValues(BitFinexEntity.class.getName().toString());
+
+        System.out.println("QUADRIGA CEX");
+        newCalc.compareExchanges(quadEntity, cexEntity);
+        System.out.println("\nBITFINEX CEX");
+        newCalc.compareExchanges(bitFinexEntity, cexEntity);
+        System.out.println("\nQUADRIGA BITFINEX");
+        newCalc.compareExchanges(quadEntity, bitFinexEntity);
+
+    }
+
+    private void compareExchanges(BaseExchangeEntity ex1, BaseExchangeEntity ex2){
+        for (Map.Entry<String, Double> exchange1:ex1.getAllPairs().entrySet()) {
+            for (Map.Entry<String, Double> exchange2 : ex2.getAllPairs().entrySet()) {
+                if (exchange1.getKey().equals(exchange2.getKey())) {
+                    Double diff = exchange1.getValue() - exchange2.getValue();
+                    Double spread = (exchange2.getValue() - exchange1.getValue())/exchange2.getValue()*100;
+                    System.out.println(exchange1.getKey() +" "+ exchange1.getValue().toString()
+                            +" "+ exchange2.getValue().toString() +" "+ formatter.format(diff)+" "+ formatter.format(spread) + "%");
+                }
+            }
+        }
+    }
+
+    public ExchangeSpreadCalc() {
+    }
+
+    public void getAllRatesfromAPIs() throws IOException, ClassNotFoundException {
+        //Free version only allows two currencies at a time and only 60 calls per hour
+        List<Thread> threadlist = new ArrayList<>();
+        threadlist.add(new Thread(new InstantiateClasses(CEXEntity.class)));
+        threadlist.add(new Thread(new InstantiateClasses(QuadrigaEntity.class)));
+        threadlist.add(new Thread(new InstantiateClasses(BitFinexEntity.class)));
+        Util.runThreads(threadlist);
+    }
+}
