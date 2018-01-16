@@ -3,6 +3,7 @@ package za.co.jefdev;
 import za.co.jefdev.persistence.BaseExchangeEntity;
 import za.co.jefdev.persistence.CEXEntity;
 import za.co.jefdev.persistence.CoinapultEntity;
+import za.co.jefdev.persistence.EXMOEntity;
 import za.co.jefdev.utils.FileReaderWriter;
 import za.co.jefdev.utils.InstantiateClasses;
 import za.co.jefdev.utils.Util;
@@ -24,8 +25,8 @@ public class ExchangeSpreadCalc {
         CEXEntity cexEntity = (CEXEntity) FileReaderWriter.loadValues(CEXEntity.class.getName().toString());
 //        QuadrigaEntity quadEntity = (QuadrigaEntity) FileReaderWriter.loadValues(QuadrigaEntity.class.getName().toString());
 //        BitFinexEntity bitFinexEntity = (BitFinexEntity) FileReaderWriter.loadValues(BitFinexEntity.class.getName().toString());
+        EXMOEntity exmoEntity = (EXMOEntity) FileReaderWriter.loadValues(EXMOEntity.class.getName().toString());
         CoinapultEntity coinapultEntity = (CoinapultEntity) FileReaderWriter.loadValues(CoinapultEntity.class.getName().toString());
-//        EXMOEntity exmoEntity = (EXMOEntity) FileReaderWriter.loadValues(EXMOEntity.class.getName().toString());
 
 //        System.out.println("QUADRIGA CEX");
 //        newCalc.compareExchanges(quadEntity, cexEntity);
@@ -33,12 +34,15 @@ public class ExchangeSpreadCalc {
 //        newCalc.compareExchanges(bitFinexEntity, cexEntity);
 //        System.out.println("\nQUADRIGA BITFINEX");
 //        newCalc.compareExchanges(quadEntity, bitFinexEntity);
-//        System.out.println("\nCEX EXMO");
-//        newCalc.compareExchanges(cexEntity, exmoEntity);
+        System.out.println("\nCEX EXMO");
+        newCalc.compareExchanges(cexEntity, exmoEntity);
 //        System.out.println("\nBITFINEX EXMO");
 //        newCalc.compareExchanges(bitFinexEntity, exmoEntity);
         System.out.println("\nCOINAPULT CEX");
         newCalc.compareExchanges(coinapultEntity, cexEntity);
+        System.out.println("\nCOINAPULT EXMO");
+        newCalc.compareExchanges(coinapultEntity, exmoEntity);
+
 
     }
 
@@ -64,7 +68,7 @@ public class ExchangeSpreadCalc {
         threadlist.add(new Thread(new InstantiateClasses(CEXEntity.class)));
         threadlist.add(new Thread(new InstantiateClasses(CoinapultEntity.class)));
 //        threadlist.add(new Thread(new InstantiateClasses(BitFinexEntity.class)));
-//        threadlist.add(new Thread(new InstantiateClasses(EXMOEntity.class)));
+        threadlist.add(new Thread(new InstantiateClasses(EXMOEntity.class)));
         Util.runThreads(threadlist);
     }
 }
