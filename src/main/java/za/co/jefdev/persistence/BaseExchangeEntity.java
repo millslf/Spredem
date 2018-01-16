@@ -23,7 +23,11 @@ public class BaseExchangeEntity implements Serializable{
             try {
                 map.put(pr.substring(0,6), new Double(pr.substring(6, pr.length())));
             }catch (NumberFormatException ex){
-                map.put(pr.substring(0,7), new Double(pr.substring(7, pr.length())));
+                try {
+                    map.put(pr.substring(0,7), new Double(pr.substring(7, pr.length())));
+                }catch (NumberFormatException ex2) {
+                        map.put(pr.substring(0, 8), new Double(pr.substring(8, pr.length())));
+                }
             }
         }
         return map;
