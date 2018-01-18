@@ -1,9 +1,6 @@
 package za.co.jefdev;
 
-import za.co.jefdev.persistence.BaseExchangeEntity;
-import za.co.jefdev.persistence.CEXEntity;
-import za.co.jefdev.persistence.CoinapultEntity;
-import za.co.jefdev.persistence.EXMOEntity;
+import za.co.jefdev.persistence.*;
 import za.co.jefdev.utils.FileReaderWriter;
 import za.co.jefdev.utils.InstantiateClasses;
 import za.co.jefdev.utils.Util;
@@ -11,9 +8,8 @@ import za.co.jefdev.utils.Util;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ExchangeSpreadCalc {
 
@@ -47,16 +43,23 @@ public class ExchangeSpreadCalc {
     }
 
     private void compareExchanges(BaseExchangeEntity ex1, BaseExchangeEntity ex2) {
+        List<ExchangeSpreadResult> exchangeSpreadResults = new ArrayList<>();
         for (Map.Entry<String, Double> exchange1 : ex1.getAllPairs().entrySet()) {
             for (Map.Entry<String, Double> exchange2 : ex2.getAllPairs().entrySet()) {
                 if (exchange1.getKey().equals(exchange2.getKey())) {
+                    ExchangeSpreadResult result;
                     Double diff = exchange1.getValue() - exchange2.getValue();
                     Double spread = (exchange2.getValue() - exchange1.getValue()) / exchange2.getValue() * 100;
-                    System.out.println(exchange1.getKey() + "\t" + exchange1.getValue().toString()
-                            + "\t" + exchange2.getValue().toString() + "\t" + formatter.format(diff) + "\t" + formatter.format(spread) + "%");
+
+                    result = new ExchangeSpreadResult(exchange1.getKey(), exchange1.getValue(), exchange2.getValue(), diff, spread);
+                    exchangeSpreadResults.add(result);
                 }
             }
         }
+        Collections.sort(exchangeSpreadResults, Comparator.comparing(ExchangeSpreadResult::getPercentage));
+        System.out.println(exchangeSpreadResults.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining("")));
     }
 
     public ExchangeSpreadCalc() {
