@@ -1,6 +1,12 @@
 package za.co.jefdev.persistence;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 public class ExchangeSpreadResult {
+
+    public static NumberFormat formatter = new DecimalFormat("###,###0.000000");
+
     String pair;
     Double askExchange, bidExchange, diff, percentage;
 
@@ -54,6 +60,7 @@ public class ExchangeSpreadResult {
 
     @Override
     public String toString() {
-        return String.format("%-10.10s  %-10.10s  %-10.10s  %-10.10s  %-10.10s%n", pair, askExchange, bidExchange, diff, percentage + "%");
+        return String.format("%-10.10s  %-10.10s  %-10.10s  %-10.10s  %-10.10s%n", pair, formatter.format(askExchange),
+                formatter.format(bidExchange), formatter.format(diff), formatter.format(percentage) + "%");
     }
 }

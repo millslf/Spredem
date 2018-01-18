@@ -6,40 +6,24 @@ import za.co.jefdev.utils.InstantiateClasses;
 import za.co.jefdev.utils.Util;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ExchangeSpreadCalc {
 
-    public static NumberFormat formatter = new DecimalFormat("###,###0.000000");
-
     public static void main(String[] args) throws Exception {
         ExchangeSpreadCalc newCalc = new ExchangeSpreadCalc();
         newCalc.getAllRatesfromAPIs();
         CEXEntity cexEntity = (CEXEntity) FileReaderWriter.loadValues(CEXEntity.class.getName().toString());
-//        QuadrigaEntity quadEntity = (QuadrigaEntity) FileReaderWriter.loadValues(QuadrigaEntity.class.getName().toString());
-//        BitFinexEntity bitFinexEntity = (BitFinexEntity) FileReaderWriter.loadValues(BitFinexEntity.class.getName().toString());
         EXMOEntity exmoEntity = (EXMOEntity) FileReaderWriter.loadValues(EXMOEntity.class.getName().toString());
         CoinapultEntity coinapultEntity = (CoinapultEntity) FileReaderWriter.loadValues(CoinapultEntity.class.getName().toString());
 
-//        System.out.println("QUADRIGA CEX");
-//        newCalc.compareExchanges(quadEntity, cexEntity);
-//        System.out.println("\nBITFINEX CEX");
-//        newCalc.compareExchanges(bitFinexEntity, cexEntity);
-//        System.out.println("\nQUADRIGA BITFINEX");
-//        newCalc.compareExchanges(quadEntity, bitFinexEntity);
         System.out.println("\nCEX EXMO");
         newCalc.compareExchanges(cexEntity, exmoEntity);
-//        System.out.println("\nBITFINEX EXMO");
-//        newCalc.compareExchanges(bitFinexEntity, exmoEntity);
         System.out.println("\nCOINAPULT CEX");
         newCalc.compareExchanges(coinapultEntity, cexEntity);
         System.out.println("\nCOINAPULT EXMO");
         newCalc.compareExchanges(coinapultEntity, exmoEntity);
-
-
     }
 
     private void compareExchanges(BaseExchangeEntity ex1, BaseExchangeEntity ex2) {
@@ -50,7 +34,6 @@ public class ExchangeSpreadCalc {
                     ExchangeSpreadResult result;
                     Double diff = exchange1.getValue() - exchange2.getValue();
                     Double spread = (exchange2.getValue() - exchange1.getValue()) / exchange2.getValue() * 100;
-
                     result = new ExchangeSpreadResult(exchange1.getKey(), exchange1.getValue(), exchange2.getValue(), diff, spread);
                     exchangeSpreadResults.add(result);
                 }
@@ -70,7 +53,6 @@ public class ExchangeSpreadCalc {
         List<Thread> threadlist = new ArrayList<>();
         threadlist.add(new Thread(new InstantiateClasses(CEXEntity.class)));
         threadlist.add(new Thread(new InstantiateClasses(CoinapultEntity.class)));
-//        threadlist.add(new Thread(new InstantiateClasses(BitFinexEntity.class)));
         threadlist.add(new Thread(new InstantiateClasses(EXMOEntity.class)));
         Util.runThreads(threadlist);
     }
