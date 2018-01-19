@@ -6,7 +6,10 @@ import za.co.jefdev.utils.InstantiateClasses;
 import za.co.jefdev.utils.Util;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ExchangeSpreadCalc {
@@ -27,23 +30,26 @@ public class ExchangeSpreadCalc {
     }
 
     private void compareExchanges(BaseExchangeEntity ex1, BaseExchangeEntity ex2) {
+
         List<ExchangeSpreadResult> exchangeSpreadResults = new ArrayList<>();
-        for (Map.Entry<String, Double> exchange1 : ex1.getAllPairs().entrySet()) {
-            for (Map.Entry<String, Double> exchange2 : ex2.getAllPairs().entrySet()) {
-                if (exchange1.getKey().equals(exchange2.getKey())) {
-                    ExchangeSpreadResult result;
-                    Double diff = exchange1.getValue() - exchange2.getValue();
-                    Double spread = (exchange2.getValue() - exchange1.getValue()) / exchange2.getValue() * 100;
-                    result = new ExchangeSpreadResult(exchange1.getKey(), exchange1.getValue(), exchange2.getValue(), diff, spread);
-                    exchangeSpreadResults.add(result);
-                }
-            }
-        }
+
+        ex1.getAllPairs().forEach((k1, v1) ->
+                ex2.getAllPairs().forEach((k2, v2) -> {
+                    if (k1.equals(k2)) {
+                        ExchangeSpreadResult result;
+                        Double diff = v1 - v2;
+                        Double spread = (v2 - v1) / v2 * 100;
+                        result = new ExchangeSpreadResult(k1, v1, v2, diff, spread);
+                        exchangeSpreadResults.add(result);
+                    }
+                }));
+
         Collections.sort(exchangeSpreadResults, Comparator.comparing(ExchangeSpreadResult::getPercentage));
         System.out.println(exchangeSpreadResults.stream()
                 .map(Object::toString)
                 .collect(Collectors.joining("")));
     }
+
 
     public ExchangeSpreadCalc() {
     }
