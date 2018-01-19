@@ -5,7 +5,7 @@ import java.text.NumberFormat;
 
 public class ExchangeSpreadResult {
 
-    public static NumberFormat formatter = new DecimalFormat("###,###0.000000");
+    public static NumberFormat formatter = new DecimalFormat("###,##0.000000");
 
     String pair;
     Double askExchange, bidExchange, diff, percentage;
@@ -61,6 +61,7 @@ public class ExchangeSpreadResult {
     @Override
     public String toString() {
         return String.format("%-10.10s  %-10.10s  %-10.10s  %-10.10s  %-10.10s%n", pair, formatter.format(askExchange),
-                formatter.format(bidExchange), formatter.format(diff), formatter.format(percentage) + "%");
+                formatter.format(bidExchange), formatter.format(diff),
+                formatter.format(percentage).substring(0,formatter.format(percentage).length()-4) + "%");
     }
 }
