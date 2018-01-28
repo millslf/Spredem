@@ -1,8 +1,8 @@
 package za.co.jefdev.persistence;
 
 import org.json.JSONObject;
+import za.co.jefdev.messenger.utils.Rest;
 import za.co.jefdev.utils.FileReaderWriter;
-import za.co.jefdev.utils.Rest;
 
 import java.io.IOException;
 import java.io.Serializable;

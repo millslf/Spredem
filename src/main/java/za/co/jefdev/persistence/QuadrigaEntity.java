@@ -1,8 +1,8 @@
 package za.co.jefdev.persistence;
 
 import org.json.JSONObject;
+import za.co.jefdev.messenger.utils.Rest;
 import za.co.jefdev.utils.FileReaderWriter;
-import za.co.jefdev.utils.Rest;
 
 import java.io.IOException;
 
@@ -18,5 +18,4 @@ public class QuadrigaEntity extends BaseExchangeEntity {
         allPairsDelimited = allPairsDelimited.substring(0, allPairsDelimited.length() - 1);
         FileReaderWriter.persistEntities(this);
     }
-
 }

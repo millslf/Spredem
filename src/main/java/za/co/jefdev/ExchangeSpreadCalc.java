@@ -1,9 +1,9 @@
 package za.co.jefdev;
 
+import za.co.jefdev.messenger.utils.Util;
 import za.co.jefdev.persistence.*;
 import za.co.jefdev.utils.FileReaderWriter;
 import za.co.jefdev.utils.InstantiateClasses;
-import za.co.jefdev.utils.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,13 +20,20 @@ public class ExchangeSpreadCalc {
         CEXEntity cexEntity = (CEXEntity) FileReaderWriter.loadValues(CEXEntity.class.getName().toString());
         EXMOEntity exmoEntity = (EXMOEntity) FileReaderWriter.loadValues(EXMOEntity.class.getName().toString());
         CoinapultEntity coinapultEntity = (CoinapultEntity) FileReaderWriter.loadValues(CoinapultEntity.class.getName().toString());
+        QuadrigaEntity quadrigaEntity = (QuadrigaEntity)  FileReaderWriter.loadValues(QuadrigaEntity.class.getName().toString());
 
         System.out.println("\nCEX EXMO");
         newCalc.compareExchanges(cexEntity, exmoEntity);
-        System.out.println("\nCOINAPULT CEX");
-        newCalc.compareExchanges(coinapultEntity, cexEntity);
+//        System.out.println("\nCOINAPULT CEX");
+//        newCalc.compareExchanges(coinapultEntity, cexEntity);
         System.out.println("\nCOINAPULT EXMO");
         newCalc.compareExchanges(coinapultEntity, exmoEntity);
+//        System.out.println("\nCOINAPULT QUADRIGA");
+//        newCalc.compareExchanges(coinapultEntity, quadrigaEntity);
+//        System.out.println("\nQUADRIGA CEX");
+//        newCalc.compareExchanges(quadrigaEntity, cexEntity);
+        System.out.println("\nQUADRIGA EXMO");
+        newCalc.compareExchanges(quadrigaEntity, exmoEntity);
     }
 
     private void compareExchanges(BaseExchangeEntity ex1, BaseExchangeEntity ex2) {
@@ -55,11 +62,11 @@ public class ExchangeSpreadCalc {
     }
 
     public void getAllRatesfromAPIs() throws IOException, ClassNotFoundException {
-        //Free version only allows two currencies at a time and only 60 calls per hour
         List<Thread> threadlist = new ArrayList<>();
         threadlist.add(new Thread(new InstantiateClasses(CEXEntity.class)));
         threadlist.add(new Thread(new InstantiateClasses(CoinapultEntity.class)));
         threadlist.add(new Thread(new InstantiateClasses(EXMOEntity.class)));
+        threadlist.add(new Thread(new InstantiateClasses(QuadrigaEntity.class)));
         Util.runThreads(threadlist);
     }
 }
