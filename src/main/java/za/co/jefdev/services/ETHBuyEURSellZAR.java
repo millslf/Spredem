@@ -1,11 +1,26 @@
 package za.co.jefdev.services;
+
 import za.co.jefdev.BaseCalc;
+import za.co.jefdev.persistence.CEXEntity;
+import za.co.jefdev.persistence.EUREntity;
+import za.co.jefdev.persistence.LunoEntity;
+import za.co.jefdev.utils.FileReaderWriter;
+
+import java.io.IOException;
 
 public class ETHBuyEURSellZAR extends BaseCalc {
 
-    Double effectiveSpread;
+    private static Double LIMIT = new Double(3000);
 
-    public ETHBuyEURSellZAR() {
+    Double effectiveSpread;
+    LunoEntity lunoEntity = null;
+    CEXEntity cexEntity = null;
+    EUREntity currency = null;
+
+    public ETHBuyEURSellZAR() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
+        lunoEntity = (LunoEntity) FileReaderWriter.loadValues(LunoEntity.class.getName().toString());
+        cexEntity = (CEXEntity) FileReaderWriter.loadValues(CEXEntity.class.getName().toString());
+        currency = (EUREntity) FileReaderWriter.loadValues(EUREntity.class.getName().toString());
     }
 
     @Override
@@ -14,15 +29,15 @@ public class ETHBuyEURSellZAR extends BaseCalc {
     }
 
     @Override
-    public String calcProfit(Double amt){
-        Double cexWithFee = amt*(BaseCalc.PROVIDER_BUY_FEE);
-        Double actualCostAtFNB = cexWithFee*fnbZarEur;
-        Double numOfETH = amt/ cexETHEURPrice;
-        Double sellAtCurrentRateforBTC = numOfETH * cexBTCforETHAsk;
-        Double sellBTCForZAR = sellAtCurrentRateforBTC * lunoBTCAsk;
+    public String calcProfit(){
+        Double cexWithFee = LIMIT*(BaseCalc.PROVIDER_BUY_FEE);
+        Double actualCostAtFNB = cexWithFee*currency.getFnbZar();
+        Double numOfETH = LIMIT/ cexEntity.getPair("ETHEUR");
+        Double sellAtCurrentRateforBTC = numOfETH * cexEntity.getPair("ETHBTC");
+        Double sellBTCForZAR = sellAtCurrentRateforBTC * lunoEntity.getLunoBTCAsk();
         Double profit = sellBTCForZAR - actualCostAtFNB;
 
-        return "Buying for: EUR " + BaseCalc.formatter.format(amt) + "\n" +
+        return "Buying for: EUR " + BaseCalc.formatter.format(LIMIT) + "\n" +
                 "Provider(eg CEX) fee at " + BaseCalc.formatter.format(((BaseCalc.PROVIDER_BUY_FEE-1)*100)) +"% included: EUR " + BaseCalc.formatter.format(cexWithFee) + "\n" +
                 "Actual cost at FNB: " + BaseCalc.formatter.format(actualCostAtFNB) + "\n" +
                 "Number of ETHER at current rate: ETH " + String.format("%1$,.6f", numOfETH) + "\n" +
@@ -32,14 +47,16 @@ public class ETHBuyEURSellZAR extends BaseCalc {
     }
 
     public String printAllRates(){
-        effectiveSpread = ((lunoBTCAsk*cexBTCforETHAsk) - cexETHEURPriceZar)/(lunoBTCAsk*cexBTCforETHAsk)*100-(BaseCalc.PROVIDER_BUY_FEE-1)*100;
+        effectiveSpread = (lunoEntity.getLunoBTCAsk() -
+                1/cexEntity.getPair("ETHBTC")*cexEntity.getPair("ETHEUR")*currency.getFnbZar()) / lunoEntity.getLunoBTCAsk() * 100 - (BaseCalc.PROVIDER_BUY_FEE - 1) * 100;
 
-        return "Current EURZAR exchange rate: R " + BaseCalc.formatter.format(zarEur) + "\n" +
-                "Current EURZAR exchange rate with FNB " + BaseCalc.formatter.format(((BaseCalc.FNB_FOREX_FEE-1)*100))+ "% foreign exchange charge: R "
-                + BaseCalc.formatter.format(fnbZarEur) + "\n" +
-                "CEX ETH buy price: R " + BaseCalc.formatter.format(cexETHEURPriceZar)+"(EUR" + BaseCalc.formatter.format(cexETHEURPrice) + ")" + "\n" +
-                "CEX ETH-BTC exchange: BTC " + String.format("%1$,.6f", cexBTCforETHAsk)+" per ETH" + "\n" +
-                "Luno BTC selling price: R " + BaseCalc.formatter.format(lunoBTCAsk) + "\n" +
+
+        return "Current EURZAR exchange rate: R " + BaseCalc.formatter.format(currency.getZar()) + "\n" +
+                "Current EURZAR exchange rate with FNB " + BaseCalc.formatter.format(((BaseCalc.PROVIDER_BUY_FEE-1)*100))+ "% foreign exchange charge: R "
+                + BaseCalc.formatter.format(currency.getFnbZar()) + "\n" +
+                "CEX ETH buy price: R " + BaseCalc.formatter.format(cexEntity.getPair("ETHEUR")*currency.getZar())+"(EUR" + BaseCalc.formatter.format(cexEntity.getPair("ETHEUR")) + ")" + "\n" +
+                "CEX ETH-BTC exchange: BTC " + String.format("%1$,.6f", cexEntity.getPair("ETHBTC"))+" per ETH" + "\n" +
+                "Luno BTC selling price: R " + BaseCalc.formatter.format(lunoEntity.getLunoBTCAsk()) + "\n" +
                 "Effective Spread: " + BaseCalc.formatter.format
                 (effectiveSpread) + "%";
     }
@@ -60,5 +77,9 @@ public class ETHBuyEURSellZAR extends BaseCalc {
 
     public void setOldEmailValue(Double value){
         spreadEntity.setLastEmailspreadBuyEthEURSellZar(value);
+    }
+
+    public Boolean isMultiTrade() {
+        return true;
     }
 }

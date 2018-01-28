@@ -5,11 +5,15 @@ import java.io.Serializable;
 public class SpreadEntity implements Serializable{
     Double btcBuyUsdSellZarSpread;
     Double btcBuyEurSellZarSpread;
+    Double btcBuyRubSellZarSpread;
+    Double btcBuyGbpSellZarSpread;
     Double btcBuyZarSellUsdSpread;
     Double btcBuyEthUSDSellZarSpread;
     Double btcBuyEthEURSellZarSpread;
     Double lastEmailspreadBuyUsdSellZar;
     Double lastEmailspreadBuyEurSellZar;
+    Double lastEmailspreadBuyRubSellZar;
+    Double lastEmailspreadBuyGbpSellZar;
     Double lastEmailspreadBuyZarSellUsd;
     Double lastEmailspreadBuyEthUSDSellZar;
     Double lastEmailspreadBuyEthEURSellZar;
@@ -94,5 +98,37 @@ public class SpreadEntity implements Serializable{
 
     public void setLastEmailspreadBuyEthEURSellZar(Double lastEmailspreadBuyEthEURSellZar) {
         this.lastEmailspreadBuyEthEURSellZar = lastEmailspreadBuyEthEURSellZar;
+    }
+
+    public Double getBtcBuyRubSellZarSpread() {
+        return btcBuyRubSellZarSpread;
+    }
+
+    public void setBtcBuyRubSellZarSpread(Double btcBuyRubSellZarSpread) {
+        this.btcBuyRubSellZarSpread = btcBuyRubSellZarSpread;
+    }
+
+    public Double getLastEmailspreadBuyRubSellZar() {
+        return lastEmailspreadBuyRubSellZar;
+    }
+
+    public void setLastEmailspreadBuyRubSellZar(Double lastEmailspreadBuyRubSellZar) {
+        this.lastEmailspreadBuyRubSellZar = lastEmailspreadBuyRubSellZar;
+    }
+
+    public Double getBtcBuyGbpSellZarSpread() {
+        return btcBuyGbpSellZarSpread;
+    }
+
+    public void setBtcBuyGbpSellZarSpread(Double btcBuyGbpSellZarSpread) {
+        this.btcBuyGbpSellZarSpread = btcBuyGbpSellZarSpread;
+    }
+
+    public Double getLastEmailspreadBuyGbpSellZar() {
+        return lastEmailspreadBuyGbpSellZar;
+    }
+
+    public void setLastEmailspreadBuyGbpSellZar(Double lastEmailspreadBuyGbpSellZar) {
+        this.lastEmailspreadBuyGbpSellZar = lastEmailspreadBuyGbpSellZar;
     }
 }

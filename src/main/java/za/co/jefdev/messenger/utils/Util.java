@@ -12,4 +12,16 @@ public class Util {
         java.util.Collections.sort(list);
         return list;
     }
+
+    public static void runThreads(List<Thread> threadList) {
+        for (Thread thread : threadList) {
+            thread.run();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
