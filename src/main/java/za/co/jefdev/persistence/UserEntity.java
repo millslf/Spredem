@@ -15,7 +15,7 @@ public class UserEntity implements Serializable{
     private static Class[] FULL_LIST = {BTCBuyRUBSellZAR.class, BTCBuyUSDSellZAR.class, BTCBuyGBPSellZAR.class, BTCBuyEURSellZAR.class,
             BTCBuyZARSellUSD.class, ETHBuyEURSellZAR.class};
 
-    private static Class[] BTC_ONLY_LIST = {BTCBuyRUBSellZAR.class, BTCBuyUSDSellZAR.class, BTCBuyGBPSellZAR.class, BTCBuyEURSellZAR.class,
+    private static Class[] BTC_ONLY_LIST = {BTCBuyUSDSellZAR.class, BTCBuyGBPSellZAR.class, BTCBuyEURSellZAR.class,
                                             BTCBuyZARSellUSD.class};
 
     public UserEntity() throws IOException, ClassNotFoundException {

@@ -27,7 +27,7 @@ public class BTCBuyUSDSellZAR extends BaseCalc {
     @Override
     public String calcProfit(){
         Double cexWithFee = LIMIT*(BaseCalc.PROVIDER_BUY_FEE);
-        Double actualCostAtFNB = cexWithFee* currency.getFnbZar();
+        Double actualCostAtFNB = cexWithFee* currency.getFnbZar(null);
         Double numOfBTC = LIMIT/ cexEntity.getPair("BTCUSD");
         Double numOfBTCAfterTransfer = numOfBTC- BaseCalc.LUNO_BTC_TRANSFER_FEE;
         Double sellAtCurrentRate = numOfBTCAfterTransfer * lunoEntity.getLunoBTCAsk();
@@ -60,11 +60,11 @@ public class BTCBuyUSDSellZAR extends BaseCalc {
 
     public String printAllRates(){
         effectiveSpread = (lunoEntity.getLunoBTCAsk() -
-                (cexEntity.getPair("BTCUSD") * currency.getFnbZar()))/lunoEntity.getLunoBTCAsk()*100-(BaseCalc.PROVIDER_BUY_FEE-1)*100;
+                (cexEntity.getPair("BTCUSD") * currency.getFnbZar(null)))/lunoEntity.getLunoBTCAsk()*100-(BaseCalc.PROVIDER_BUY_FEE-1)*100;
 
         return "Current USDZAR exchange rate: R " + BaseCalc.formatter.format(currency.getZar()) + "\n" +
         "Current USDZAR exchange rate with FNB " + BaseCalc.formatter.format(((currency.FNB_FOREX_FEE-1)*100))+ "% foreign exchange charge: R "
-                + BaseCalc.formatter.format(currency.getFnbZar()) + "\n" +
+                + BaseCalc.formatter.format(currency.getFnbZar(null)) + "\n" +
         "CEX buy price(Excluding provider fee): R " + BaseCalc.formatter.format(cexEntity.getPair("BTCUSD")*currency.getZar())+
                 "($" + BaseCalc.formatter.format(cexEntity.getPair("BTCUSD")) + ")" + "\n" +
         "Luno selling price: R " + BaseCalc.formatter.format(lunoEntity.getLunoBTCAsk()) + "\n" +

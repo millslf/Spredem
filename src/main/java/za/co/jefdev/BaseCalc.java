@@ -97,10 +97,10 @@ public class BaseCalc {
         return "";
     }
 
-    public void getAllRatesfromAPIs() throws IOException, ClassNotFoundException {
+    public void getAllRatesfromAPIs() throws IOException, ClassNotFoundException, InterruptedException {
         //Free version only allows two currencies at a time and only 60 calls per hour
 
-        List<Thread> threadlist = new ArrayList<>();
+        List<Runnable> threadlist = new ArrayList<>();
         threadlist.add(new Thread(new RateRest(usd, eur, "USD_ZAR", "EUR_ZAR",
                 "https://free.currencyconverterapi.com/api/v5/convert?q=USD_ZAR,EUR_ZAR&compact=ultra")));
         threadlist.add(new Thread(new RateRest(rub, gbp, "RUB_ZAR", "GBP_ZAR",
@@ -127,8 +127,8 @@ public class BaseCalc {
         public void run(){
             JSONObject jsonObject = null;
             try {
-                jsonObject = new JSONObject(Rest.makeRequest(url));
-            } catch (IOException e) {
+                jsonObject = new JSONObject(Rest.makeEasyRequest(url));
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             cur1.setZar(jsonObject.getDouble(curPair1));

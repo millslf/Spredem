@@ -12,10 +12,8 @@ public class InstantiateClasses implements Runnable {
     public void run() {
         try {
             aClass.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        } catch (InstantiationException|IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 }

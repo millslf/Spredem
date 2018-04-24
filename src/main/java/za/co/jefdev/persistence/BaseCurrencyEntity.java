@@ -16,8 +16,13 @@ public class BaseCurrencyEntity implements Serializable{
         setFnbZar(zar*FNB_FOREX_FEE);
     }
 
-    public Double getFnbZar() {
-        return fnbZar;
+    public Double getFnbZar(Double overrideForexFee) {
+        if(overrideForexFee == null){
+            return fnbZar;
+        }
+        else{
+            return getZar()*overrideForexFee;
+        }
     }
 
     public void setFnbZar(Double fnbZar) {

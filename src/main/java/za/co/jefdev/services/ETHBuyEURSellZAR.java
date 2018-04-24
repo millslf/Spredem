@@ -31,7 +31,7 @@ public class ETHBuyEURSellZAR extends BaseCalc {
     @Override
     public String calcProfit(){
         Double cexWithFee = LIMIT*(BaseCalc.PROVIDER_BUY_FEE);
-        Double actualCostAtFNB = cexWithFee*currency.getFnbZar();
+        Double actualCostAtFNB = cexWithFee*currency.getFnbZar(null);
         Double numOfETH = LIMIT/ cexEntity.getPair("ETHEUR");
         Double sellAtCurrentRateforBTC = numOfETH * cexEntity.getPair("ETHBTC");
         Double sellBTCForZAR = sellAtCurrentRateforBTC * lunoEntity.getLunoBTCAsk();
@@ -48,12 +48,12 @@ public class ETHBuyEURSellZAR extends BaseCalc {
 
     public String printAllRates(){
         effectiveSpread = (lunoEntity.getLunoBTCAsk() -
-                1/cexEntity.getPair("ETHBTC")*cexEntity.getPair("ETHEUR")*currency.getFnbZar()) / lunoEntity.getLunoBTCAsk() * 100 - (BaseCalc.PROVIDER_BUY_FEE - 1) * 100;
+                1/cexEntity.getPair("ETHBTC")*cexEntity.getPair("ETHEUR")*currency.getFnbZar(null)) / lunoEntity.getLunoBTCAsk() * 100 - (BaseCalc.PROVIDER_BUY_FEE - 1) * 100;
 
 
         return "Current EURZAR exchange rate: R " + BaseCalc.formatter.format(currency.getZar()) + "\n" +
                 "Current EURZAR exchange rate with FNB " + BaseCalc.formatter.format(((BaseCalc.PROVIDER_BUY_FEE-1)*100))+ "% foreign exchange charge: R "
-                + BaseCalc.formatter.format(currency.getFnbZar()) + "\n" +
+                + BaseCalc.formatter.format(currency.getFnbZar(null)) + "\n" +
                 "CEX ETH buy price: R " + BaseCalc.formatter.format(cexEntity.getPair("ETHEUR")*currency.getZar())+"(EUR" + BaseCalc.formatter.format(cexEntity.getPair("ETHEUR")) + ")" + "\n" +
                 "CEX ETH-BTC exchange: BTC " + String.format("%1$,.6f", cexEntity.getPair("ETHBTC"))+" per ETH" + "\n" +
                 "Luno BTC selling price: R " + BaseCalc.formatter.format(lunoEntity.getLunoBTCAsk()) + "\n" +

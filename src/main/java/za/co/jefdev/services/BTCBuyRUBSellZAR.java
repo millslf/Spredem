@@ -27,7 +27,7 @@ public class BTCBuyRUBSellZAR extends BaseCalc {
     @Override
     public String calcProfit(){
         Double cexWithFee = LIMIT*(BaseCalc.PROVIDER_BUY_FEE);
-        Double actualCostAtFNB = cexWithFee* currency.getFnbZar();
+        Double actualCostAtFNB = cexWithFee* currency.getFnbZar(1.05);
         Double numOfBTC = LIMIT/ cexEntity.getPair("BTCRUB");
         Double numOfBTCAfterTransfer = numOfBTC- BaseCalc.LUNO_BTC_TRANSFER_FEE;
         Double sellAtCurrentRate = numOfBTCAfterTransfer * lunoEntity.getLunoBTCAsk();
@@ -60,12 +60,12 @@ public class BTCBuyRUBSellZAR extends BaseCalc {
 
     public String printAllRates(){
         effectiveSpread = (lunoEntity.getLunoBTCAsk() -
-                (cexEntity.getPair("BTCRUB") * currency.getFnbZar()))/lunoEntity.getLunoBTCAsk()*100-(BaseCalc.PROVIDER_BUY_FEE-1)*100;
+                (cexEntity.getPair("BTCRUB") * currency.getFnbZar(1.05)))/lunoEntity.getLunoBTCAsk()*100-(BaseCalc.PROVIDER_BUY_FEE-1)*100;
 
         return "Current RUBZAR exchange rate: R " + BaseCalc.formatter.format(currency.getZar()) + "\n" +
-        "Current RUBZAR exchange rate with FNB " + BaseCalc.formatter.format(((currency.FNB_FOREX_FEE-1)*100))+ "% foreign exchange charge: R "
-                + BaseCalc.formatter.format(currency.getFnbZar()) + "\n" +
-        "CEX buy price(Excluding provider fee): R " + BaseCalc.formatter.format(cexEntity.getPair("BTCRUB") * currency.getFnbZar())
+        "Current RUBZAR exchange rate with FNB " + BaseCalc.formatter.format(((1.05-1)*100))+ "% foreign exchange charge: R "
+                + BaseCalc.formatter.format(currency.getFnbZar(1.05)) + "\n" +
+        "CEX buy price(Excluding provider fee): R " + BaseCalc.formatter.format(cexEntity.getPair("BTCRUB") * currency.getFnbZar(1.05))
                 +"(RUB" + BaseCalc.formatter.format(cexEntity.getPair("BTCRUB")) + ")" + "\n" +
         "Luno selling price: R " + BaseCalc.formatter.format(lunoEntity.getLunoBTCAsk()) + "\n" +
         "Spread with "  + BaseCalc.formatter.format(((BaseCalc.PROVIDER_BUY_FEE-1)*100)) + "% charge(1 BTC): "
